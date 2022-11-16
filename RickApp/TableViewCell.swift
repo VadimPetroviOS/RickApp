@@ -10,6 +10,7 @@ import UIKit
 class TableViewCell: UITableViewCell {
     
     static let identifier = "cell"
+    var a: CGFloat = 10
     
     let imagesView: UIImageView = {
         let image = UIImageView()
@@ -56,6 +57,8 @@ class TableViewCell: UITableViewCell {
         let label = UILabel()
         label.layer.cornerRadius = 8
         label.clipsToBounds = true
+        label.textAlignment = .center
+        label.
         label.font = UIFont(name:"SF UI Text", size: 14)
         label.text = ""
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -101,7 +104,14 @@ class TableViewCell: UITableViewCell {
             
             statusLabel.topAnchor.constraint(equalTo: topAnchor, constant: 5),
             statusLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
-            statusLabel.heightAnchor.constraint(equalToConstant: 17),
+            statusLabel.heightAnchor.constraint(equalToConstant: 25),
+            
+            switch statusLabel.backgroundColor {
+            case .systemGreen: statusLabel.widthAnchor.constraint(equalToConstant: 56 )
+            default: statusLabel.widthAnchor.constraint(equalToConstant: 96 )
+            }
+            
+            
         ])
     }
     
@@ -125,9 +135,14 @@ class TableViewCell: UITableViewCell {
     func setStatus(result: String) {
         statusLabel.text = result.uppercased()
         switch result {
-        case "Alive": statusLabel.backgroundColor = .systemGreen
+        case "Alive": /*statusLabel.backgroundColor = .systemGreen*/ aliveStatus()
         case "Dead": statusLabel.backgroundColor = .systemRed
         default: statusLabel.backgroundColor = .systemGray
         }
+    }
+    
+    func aliveStatus() {
+        statusLabel.backgroundColor = .systemGreen
+        
     }
 }

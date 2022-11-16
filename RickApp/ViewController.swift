@@ -17,8 +17,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewDidLoad()
         self.tableView.dataSource = self
         self.tableView.delegate = self
-        self.tableView.register(TableViewCell.self,
-                                forCellReuseIdentifier: TableViewCell.identifier)
+        self.tableView.register(
+            TableViewCell.self,
+            forCellReuseIdentifier: TableViewCell.identifier
+        )
+        self.navigationItem.title = "Characters"
+        self.navigationController?.navigationBar.prefersLargeTitles = true
         self.view.addSubview(self.tableView)
         parser.parse { data in
             self.result = data
@@ -26,7 +30,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 self.tableView.reloadData()
             }
         }
-        
     }
 
     override func viewDidLayoutSubviews() {
