@@ -47,7 +47,9 @@ extension ViewController {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell.identifier, for: indexPath) as! TableViewCell
         
+        
         cell.setImage(result: result[indexPath.row].image)
+        
         cell.setName(result: result[indexPath.row].name)
         cell.setSpecies(result: result[indexPath.row].species)
         cell.setOrigin(result: result[indexPath.row].origin.name)
