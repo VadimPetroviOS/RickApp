@@ -64,8 +64,10 @@ class TableViewCell: UITableViewCell {
         return label
     }()
     
-    let view: UIView = {
+    let statusAliveView: UIView = {
         let view = UIView()
+        view.backgroundColor = .yellow
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -82,8 +84,8 @@ class TableViewCell: UITableViewCell {
     
     func setSubviews() {
         self.addSubview(imagesView)
+        self.addSubview(statusAliveView)
         self.addSubview(statusLabel)
-        
     }
     
     func setConstraints() {
@@ -92,16 +94,6 @@ class TableViewCell: UITableViewCell {
         stack.axis = .vertical
         stack.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(stack)
-        
-        /*
-        if statusLabel.backgroundColor == .systemGreen {
-            b = 56
-        } else if statusLabel.backgroundColor == .systemRed {
-            b = 55
-        } else {
-            b = 92
-        }
-        */
         
         NSLayoutConstraint.activate([
             imagesView.topAnchor.constraint(equalTo: topAnchor,constant: 5),
@@ -116,11 +108,11 @@ class TableViewCell: UITableViewCell {
             stack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
             
             nameLabel.topAnchor.constraint(equalTo: stack.topAnchor),
-            
+           
             statusLabel.topAnchor.constraint(equalTo: topAnchor, constant: 5),
-            statusLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
-            statusLabel.widthAnchor.constraint(equalToConstant: b),
-            statusLabel.heightAnchor.constraint(equalToConstant: a)
+            statusLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -40),
+            
+            
         ])
     }
     
@@ -144,15 +136,33 @@ class TableViewCell: UITableViewCell {
     func setStatus(result: String) {
         statusLabel.text = result.uppercased()
         switch result {
-        case "Alive": statusLabel.backgroundColor = .systemGreen
-        case "Dead": statusLabel.backgroundColor = .systemRed
-        default: statusLabel.backgroundColor = .systemGray
+        case "Alive": statusAliveView.backgroundColor = .systemGreen
+        case "Dead": statusAliveView.backgroundColor = .systemRed
+        default: statusAliveView.backgroundColor = .systemGray
         }
         
         switch result {
-        case "Alive": b = 56
-        case "Dead": b = 55
-        default: b = 92
+        case "Alive":
+            NSLayoutConstraint.activate([
+                statusAliveView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
+                statusAliveView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
+                statusAliveView.heightAnchor.constraint(equalToConstant: 25),
+                statusAliveView.widthAnchor.constraint(equalToConstant: 56)
+            ])
+        case "Dead":
+            NSLayoutConstraint.activate([
+                statusAliveView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
+                statusAliveView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
+                statusAliveView.heightAnchor.constraint(equalToConstant: 25),
+                statusAliveView.widthAnchor.constraint(equalToConstant: 55)
+            ])
+        default:
+            NSLayoutConstraint.activate([
+                statusAliveView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
+                statusAliveView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
+                statusAliveView.heightAnchor.constraint(equalToConstant: 25),
+                statusAliveView.widthAnchor.constraint(equalToConstant: 92)
+            ])
         }
     }
     
