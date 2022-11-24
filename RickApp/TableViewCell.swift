@@ -10,8 +10,6 @@ import UIKit
 class TableViewCell: UITableViewCell {
     
     static let identifier = "cell"
-    var a: CGFloat = 25
-    var b: CGFloat = 0
     
     let imagesView: UIImageView = {
         let image = UIImageView()
@@ -23,22 +21,29 @@ class TableViewCell: UITableViewCell {
     
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name:"SF UI Text", size: 21)
+        label.font = UIFont.systemFont(ofSize: 21)
         label.text = ""
+        label.textColor = UIColor.black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    let speciesLabel: UILabel = {
+    var speciesGenderLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name:"SF UI Text", size: 14)
+        label.font = UIFont.systemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    let image: UIImageView = {
+        let images = UIImageView()
+        images.image = UIImage(systemName: "arrowtriangle.right.fill")
+        images.tintColor = UIColor.textOrange
+        return images
     }()
     
     let videoButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .orange
         button.layer.cornerRadius = 17
         button.clipsToBounds = true
         button.setTitle("Watch Episodes", for: .normal)
@@ -59,14 +64,24 @@ class TableViewCell: UITableViewCell {
         label.layer.cornerRadius = 8
         label.clipsToBounds = true
         label.textAlignment = .center
-        label.font = UIFont(name:"SF UI Text", size: 14)
+        label.font = UIFont.systemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    let statusAliveView: UIView = {
+    let statusView: UIView = {
         let view = UIView()
-        view.backgroundColor = .yellow
+        view.layer.cornerRadius = 25/2
+        view.clipsToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let videoView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 17/2
+        view.clipsToBounds = true
+        view.backgroundColor = UIColor.mainOrange
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -84,33 +99,44 @@ class TableViewCell: UITableViewCell {
     
     func setSubviews() {
         self.addSubview(imagesView)
-        self.addSubview(statusAliveView)
+        self.addSubview(statusView)
+        self.addSubview(nameLabel)
         self.addSubview(statusLabel)
+        self.addSubview(speciesGenderLabel)
+        self.addSubview(videoView)
+        videoView.addSubview(image)
     }
     
     func setConstraints() {
-        let stack = UIStackView(arrangedSubviews: [nameLabel, speciesLabel, videoButton, locationNameLabel])
-        stack.alignment = .leading
-        stack.axis = .vertical
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(stack)
-        
         NSLayoutConstraint.activate([
-            imagesView.topAnchor.constraint(equalTo: topAnchor,constant: 5),
+            imagesView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
             imagesView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5),
             imagesView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
             imagesView.widthAnchor.constraint(equalToConstant: 120),
             imagesView.heightAnchor.constraint(equalToConstant: 120),
             
-            stack.topAnchor.constraint(equalTo: topAnchor,constant: 5),
-            stack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5),
-            stack.leadingAnchor.constraint(equalTo: imagesView.trailingAnchor, constant: 18),
-            stack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
+            nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 9),
+            nameLabel.leadingAnchor.constraint(equalTo: imagesView.trailingAnchor, constant: 18),
+            nameLabel.widthAnchor.constraint(equalToConstant: 137),
+            nameLabel.heightAnchor.constraint(equalToConstant: 25),
             
-            nameLabel.topAnchor.constraint(equalTo: stack.topAnchor),
-           
-            statusLabel.topAnchor.constraint(equalTo: topAnchor, constant: 5),
-            statusLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -40),
+            speciesGenderLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4),
+            speciesGenderLabel.leadingAnchor.constraint(equalTo: imagesView.trailingAnchor, constant: 18),
+            
+            videoView.topAnchor.constraint(equalTo: speciesGenderLabel.bottomAnchor, constant: 12),
+            videoView.leadingAnchor.constraint(equalTo: imagesView.trailingAnchor, constant: 18),
+            videoView.widthAnchor.constraint(equalToConstant: 148),
+            videoView.heightAnchor.constraint(equalToConstant: 35),
+            
+            
+            image.widthAnchor.constraint(equalToConstant: 10),
+            image.heightAnchor.constraint(equalToConstant: 12),
+            image.topAnchor.constraint(equalTo: videoView.bottomAnchor, constant: 13),
+            image.leadingAnchor.constraint(equalTo: videoView.trailingAnchor, constant: 12),
+            
+            
+            statusLabel.topAnchor.constraint(equalTo: topAnchor, constant: 9),
+            statusLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
             
             
         ])
@@ -125,8 +151,9 @@ class TableViewCell: UITableViewCell {
         nameLabel.text = result
     }
     
-    func setSpecies(result: String) {
-        speciesLabel.text = result
+    func setSpecies(speciesResult: String, genderResult: String) {
+        speciesGenderLabel.text = "\(speciesResult), \(genderResult)"
+       
     }
     
     func setOrigin(result: String) {
@@ -136,38 +163,47 @@ class TableViewCell: UITableViewCell {
     func setStatus(result: String) {
         statusLabel.text = result.uppercased()
         switch result {
-        case "Alive": statusAliveView.backgroundColor = .systemGreen
-        case "Dead": statusAliveView.backgroundColor = .systemRed
-        default: statusAliveView.backgroundColor = .systemGray
+        case "Alive": statusView.backgroundColor = UIColor.mainGreen
+        case "Dead": statusView.backgroundColor = UIColor.mainRed
+        default: statusView.backgroundColor = UIColor.mainGray
         }
         
         switch result {
         case "Alive":
             NSLayoutConstraint.activate([
-                statusAliveView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
-                statusAliveView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
-                statusAliveView.heightAnchor.constraint(equalToConstant: 25),
-                statusAliveView.widthAnchor.constraint(equalToConstant: 56)
+                statusView.centerXAnchor.constraint(equalTo: statusLabel.centerXAnchor),
+                statusView.centerYAnchor.constraint(equalTo: statusLabel.centerYAnchor),
+                statusView.leadingAnchor.constraint(equalTo: statusLabel.leadingAnchor, constant: -8),
+                statusView.trailingAnchor.constraint(equalTo: statusLabel.trailingAnchor, constant: 8),
+                statusView.topAnchor.constraint(equalTo: statusLabel.topAnchor, constant: -4),
+                statusView.bottomAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 4),
             ])
         case "Dead":
             NSLayoutConstraint.activate([
-                statusAliveView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
-                statusAliveView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
-                statusAliveView.heightAnchor.constraint(equalToConstant: 25),
-                statusAliveView.widthAnchor.constraint(equalToConstant: 55)
+                statusView.centerXAnchor.constraint(equalTo: statusLabel.centerXAnchor),
+                statusView.centerYAnchor.constraint(equalTo: statusLabel.centerYAnchor),
+                statusView.leadingAnchor.constraint(equalTo: statusLabel.leadingAnchor, constant: -8),
+                statusView.trailingAnchor.constraint(equalTo: statusLabel.trailingAnchor, constant: 8),
+                statusView.topAnchor.constraint(equalTo: statusLabel.topAnchor, constant: -4),
+                statusView.bottomAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 4),
             ])
         default:
             NSLayoutConstraint.activate([
-                statusAliveView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
-                statusAliveView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
-                statusAliveView.heightAnchor.constraint(equalToConstant: 25),
-                statusAliveView.widthAnchor.constraint(equalToConstant: 92)
+                statusView.centerXAnchor.constraint(equalTo: statusLabel.centerXAnchor),
+                statusView.centerYAnchor.constraint(equalTo: statusLabel.centerYAnchor),
+                statusView.leadingAnchor.constraint(equalTo: statusLabel.leadingAnchor, constant: -8),
+                statusView.trailingAnchor.constraint(equalTo: statusLabel.trailingAnchor, constant: 8),
+                statusView.topAnchor.constraint(equalTo: statusLabel.topAnchor, constant: -4),
+                statusView.bottomAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 4),
             ])
         }
     }
-    
-    func aliveStatus() {
-        statusLabel.backgroundColor = .systemGreen
-        
-    }
+}
+
+extension UIColor {
+    static var mainGreen = UIColor(red: 199/255, green: 255/255, blue: 185/255, alpha: 1)
+    static var mainRed = UIColor(red: 255/255, green: 232/255, blue: 224/255, alpha: 1)
+    static var mainGray = UIColor(red: 238/255, green: 238/255, blue: 238/255, alpha: 1)
+    static var mainOrange = UIColor(red: 255/255, green: 107/255, blue: 0/255, alpha: 0.1)
+    static var textOrange = UIColor(red: 255/255, green: 107/255, blue: 0/255, alpha: 1)
 }

@@ -49,7 +49,7 @@ extension ViewController {
         
         cell.setImage(result: result[indexPath.row].image)
         cell.setName(result: result[indexPath.row].name)
-        cell.setSpecies(result: result[indexPath.row].species)
+        cell.setSpecies(speciesResult: result[indexPath.row].species, genderResult: result[indexPath.row].gender)
         cell.setOrigin(result: result[indexPath.row].origin.name)
         cell.setStatus(result: result[indexPath.row].status)
         return cell
