@@ -21,6 +21,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             TableViewCell.self,
             forCellReuseIdentifier: TableViewCell.identifier
         )
+        self.tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         self.navigationItem.title = "Characters"
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.view.addSubview(self.tableView)
@@ -56,6 +57,6 @@ extension ViewController {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 130
+        return 152
     }
 }

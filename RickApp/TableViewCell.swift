@@ -39,22 +39,22 @@ class TableViewCell: UITableViewCell {
         let images = UIImageView()
         images.image = UIImage(systemName: "arrowtriangle.right.fill")
         images.tintColor = UIColor.textOrange
+        images.translatesAutoresizingMaskIntoConstraints = false
         return images
     }()
     
-    let videoButton: UIButton = {
-        let button = UIButton()
-        button.layer.cornerRadius = 17
-        button.clipsToBounds = true
-        button.setTitle("Watch Episodes", for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    let videoLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Watch episodes"
+        label.textColor = UIColor.textOrange
+        return label
     }()
     
     let locationNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name:"SF UI Text", size: 14)
-        label.text = ""
+        label.font = UIFont.systemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -86,10 +86,19 @@ class TableViewCell: UITableViewCell {
         return view
     }()
     
+    let pointImage: UIImageView = {
+        let images = UIImageView()
+        images.image = UIImage(systemName: "location.north.fill")
+        images.tintColor = UIColor.black
+        images.translatesAutoresizingMaskIntoConstraints = false
+        return images
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setSubviews()
         setConstraints()
+        
         
     }
     
@@ -105,17 +114,19 @@ class TableViewCell: UITableViewCell {
         self.addSubview(speciesGenderLabel)
         self.addSubview(videoView)
         videoView.addSubview(image)
+        videoView.addSubview(videoLabel)
+        self.addSubview(pointImage)
+        self.addSubview(locationNameLabel)
     }
     
     func setConstraints() {
         NSLayoutConstraint.activate([
-            imagesView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
-            imagesView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5),
+            imagesView.topAnchor.constraint(equalTo: topAnchor, constant: 14),
             imagesView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
             imagesView.widthAnchor.constraint(equalToConstant: 120),
             imagesView.heightAnchor.constraint(equalToConstant: 120),
             
-            nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 9),
+            nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 14),
             nameLabel.leadingAnchor.constraint(equalTo: imagesView.trailingAnchor, constant: 18),
             nameLabel.widthAnchor.constraint(equalToConstant: 137),
             nameLabel.heightAnchor.constraint(equalToConstant: 25),
@@ -128,16 +139,26 @@ class TableViewCell: UITableViewCell {
             videoView.widthAnchor.constraint(equalToConstant: 148),
             videoView.heightAnchor.constraint(equalToConstant: 35),
             
-            
             image.widthAnchor.constraint(equalToConstant: 10),
             image.heightAnchor.constraint(equalToConstant: 12),
-            image.topAnchor.constraint(equalTo: videoView.bottomAnchor, constant: 13),
-            image.leadingAnchor.constraint(equalTo: videoView.trailingAnchor, constant: 12),
+            image.topAnchor.constraint(equalTo: videoView.topAnchor, constant: 13),
+            image.leadingAnchor.constraint(equalTo: videoView.leadingAnchor, constant: 12),
             
+            videoLabel.topAnchor.constraint(equalTo: videoView.topAnchor, constant: 9),
+            videoLabel.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 6),
             
-            statusLabel.topAnchor.constraint(equalTo: topAnchor, constant: 9),
+            statusLabel.topAnchor.constraint(equalTo: topAnchor, constant: 14),
             statusLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
             
+            pointImage.widthAnchor.constraint(equalToConstant: 8.4),
+            pointImage.heightAnchor.constraint(equalToConstant: 12),
+            pointImage.topAnchor.constraint(equalTo: videoView.bottomAnchor, constant: 12),
+            pointImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 163.8),
+            
+            locationNameLabel.topAnchor.constraint(equalTo: videoView.bottomAnchor, constant: 10),
+            locationNameLabel.leadingAnchor.constraint(equalTo: pointImage.trailingAnchor, constant: 7.8),
+            locationNameLabel.widthAnchor.constraint(equalToConstant: 102),
+            locationNameLabel.heightAnchor.constraint(equalToConstant: 17),
             
         ])
     }
@@ -162,6 +183,7 @@ class TableViewCell: UITableViewCell {
     
     func setStatus(result: String) {
         statusLabel.text = result.uppercased()
+        
         switch result {
         case "Alive": statusView.backgroundColor = UIColor.mainGreen
         case "Dead": statusView.backgroundColor = UIColor.mainRed
