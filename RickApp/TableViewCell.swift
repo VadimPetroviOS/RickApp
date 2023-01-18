@@ -171,7 +171,7 @@ class TableViewCell: UITableViewCell {
     func setName(result: String) {
         nameLabel.text = result
     }
-    
+       
     func setSpecies(speciesResult: String, genderResult: String) {
         speciesGenderLabel.text = "\(speciesResult), \(genderResult)"
        
